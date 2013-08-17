@@ -16,26 +16,21 @@ var parent = {
 	}
 };
 
-// Child
 var child = Object.create(parent);
 child.val = 20;
 child.getVal = function(){
 	return parent.getVal.call(this) + "!";
 }
 
-// grandchild
 var grandchild = Object.create(child);
 grandchild.val = 30;
 grandchild.getVal = function(){
-	return child.getVal.call(this) + "!!";
+	return parent.getVal.call(this) + "!!";
 }
 
-// results
 
 parent.log(parent.getVal());
-
 child.log(child.getVal());
-
 grandchild.log(grandchild.getVal());
 
 
@@ -47,7 +42,6 @@ grandchild.log(grandchild.getVal());
 var Parent = (function(){
 
 	function Parent(msg){
-		// empty constuctor
 		this.log(msg);
 	}
 
@@ -68,7 +62,6 @@ var Parent = (function(){
 var Child = (function(_super){
 
 	function Child(msg){
-		// empty constuctor
 		this.log(msg);
 	}
 
@@ -87,7 +80,6 @@ var Child = (function(_super){
 var GrandChild = (function(_super){
 
 	function GrandChild(msg){
-		// empty constuctor
 		this.log(msg);
 	}
 
@@ -103,17 +95,14 @@ var GrandChild = (function(_super){
 
 })(Child);
 
+
 var parent = new Parent("new Parent constuctor");
-
-console.log(parent.getVal());
-
 var child = new Child("new Child constuctor");
+var grandChild = new GrandChild("new GrandChild constuctor");
 
-console.log(child.getVal());
-
-var grandChild = new GrandChild("new Child constuctor");
-
-console.log(grandChild.getVal());
+parent.log(parent.getVal());
+child.log(child.getVal());
+grandChild.log(grandChild.getVal());
 
 /*
 	Sample 3 (jQuery)
