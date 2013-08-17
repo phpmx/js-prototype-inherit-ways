@@ -1,7 +1,7 @@
 js-prototype-inherit-ways
 =========================
 
-Hoy vamos a hablar un poco de la herencia prototipal y al final vamos a crear una clase con coffeeScript. Al ser js un lenguaje tan dinámico podemos usar diferentes tipos de syntaxis para definir una herencia.
+Hoy vamos a hablar un poco de la herencia prototipal y al final vamos a crear una clase con coffeeScript. Al ser javascript un lenguaje tan dinámico podemos usar diferentes tipos de syntaxis para definir una herencia.
 
 Object.create
 =============
@@ -299,3 +299,16 @@ Compilado
 }).call(this);
 
 ```
+
+output
+
+```
+Parent constuctor
+Parent constuctor
+Parent constuctor
+10
+100!
+1000!!!
+```
+
+* Código fuente en [GitHub](https://github.com/phpmx/js-prototype-inherit-ways)
