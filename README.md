@@ -1,11 +1,46 @@
 js-prototype-inherit-ways
 =========================
 
-Hoy vamos a hablar un poco de la herencia prototipal y al final vamos a crear una clase con coffeeScript. Al ser javascript un lenguaje tan dinámico podemos usar diferentes tipos de syntaxis para definir una herencia.
+Hoy toca hablar un poco de javascript y su herencia prototipal. Antes que nada debemos entender que todo en javascript es un objeto, de los cuales hay de diferentes tipos, desde un array hasta una función son objetos. Otra cosa importante cuando hacemos herencia con js es tener en mente que una copia de la variable no hace una copia literal, solo hace una copia de la referencia a memoria; es decir, si copiamos una función y después la función cambia, esto cambiará la copia también, debido a que solo es un puntero. Ejemplo:
 
-Object.create
-=============
+```javascript
+var obj1 = {
+	log: function(){
+		console.log(this.name);
+	},
+	name: "obj1",
+};
+var obj2 = obj1;
+// try one
+obj1.log();
+obj2.log();
+// try 2
+obj2.name = "obj2";
+obj1.log();
+obj2.log();
+// try 3
+obj1.name = "Holaaaaaaaaaaa";
+obj1.log();
+obj2.log();
+```
 
+El output es el siguiente:
+
+```
+obj1
+obj1
+obj2
+obj2
+Holaaaaaaaaaaa
+Holaaaaaaaaaaa
+```
+
+**Lo que nos indica que solo hace copia al puntero y no del objeto como tal**. Es por eso que tenemos que saber usar la herencia prototipal en js, de lo contrario no podemos meter en problemas cuando algún objeto cambie. Pero como ya saben que js es un lenguaje muy dinámico, hay varias formas de hacer herencia:
+
+Ejemplo 1
+=========
+
+Podemos usar **Object.create()** y enviar como parametro el objeto padre, de tal manera que se creara el prototipo correspondiente:
 
 ```javascript
 var parent = {
@@ -30,23 +65,16 @@ grandchild.getVal = function(){
 	return parent.getVal.call(this) + "!!";
 }
 
+
 parent.log(parent.getVal());
 child.log(child.getVal());
 grandchild.log(grandchild.getVal());
-``` 
-
-output:
-
-```
-10
-20!
-30!!
 ```
 
-Usando constructores
-=====================
+Ejemplo 2
+=========
 
-De esta manera tenemos una syntaxis mas verbosa pero también podemos personalizar las cosas en los constructores y pienso que es más fácil de leér
+También se puede usar **new** para llamar nuevas instancias de tu clase, la syntaxis es un poco más verbosa, pero a mi gusto está genial debido a que puedes jugar con los constructores, incluso es más facil de leér.
 
 ```javascript
 var Parent = (function(){
@@ -108,41 +136,28 @@ var GrandChild = (function(_super){
 
 var parent = new Parent("new Parent constuctor");
 var child = new Child("new Child constuctor");
-var grandChild = new GrandChild("new Child constuctor");
+var grandChild = new GrandChild("new GrandChild constuctor");
 
 parent.log(parent.getVal());
 child.log(child.getVal());
 grandChild.log(grandChild.getVal());
 ```
 
-output:
+Ejemplo 3
+=========
 
-```
-new Parent constuctor
-new Child constuctor
-new GrandChild constuctor
-10
-100!
-100000!!!
-```
+Este ejemplo no es una herencia como tal, es más como un merge entre dos objetos usando librerias como **jQuery** y **Underscore**. Lo cual te puede ser util y simple para ciertos casos genericos:
 
-jQuery y Underscore
-===================
-
-Con estas dos librerias puedes hacer algo parecido, pero no es herencia, en realidad solo hace un merge entre dos objetos.
-
-```
+```javascript
 /*
-	 (jQuery)
+	Sample 3 (jQuery)
 */
+
 var parent = {
 	getVal: function(){
 		return this.val;
 	},
-	val: 10,
-	log: function(msg){
-		if(window.console) console.log(msg);
-	}
+	val: 10
 }
 
 var child = $.extend({},parent,{ 
@@ -152,21 +167,18 @@ var child = $.extend({},parent,{
 	val: 200 
 });
 
-parent.log(parent.getVal());
-child.log(child.getVal());
+console.log(parent.getVal());
+console.log(child.getVal());
 
 /*
-	 (underscore)
+	Sample 4 (underscore)
 */
 
 var parent = {
 	getVal: function(){
 		return this.val;
 	},
-	val: 10,
-	log: function(msg){
-		if(window.console) console.log(msg);
-	},
+	val: 10
 }
 
 var child = { 
@@ -178,14 +190,14 @@ var child = {
 
 child = _.extend({},parent,child);
 
-parent.log(parent.getVal());
-child.log(child.getVal());
+console.log(parent.getVal());
+console.log(child.getVal());
 ```
 
-CoffeeScript
-=============
+Ejemplo 4
+=========
 
-Y un poco de la bella syntaxis de coffeeScript
+También podemos usar un poco de la belleza sintactica de coffeeScript
 
 ```coffee
 class Parent 
@@ -214,101 +226,10 @@ child.log child.getVal()
 grandChild.log grandChild.getVal() 
 ```
 
-Compilado
+Como material adicional les comparto una muy buena platica que se dió en **jsconf** de este año. Les comparto el video y los slides
 
-```javascript
+[embed]http://youtu.be/NyClWddeO_A[/embed]
 
-/*
-	Javascript Object Oriented
-*/
+* [PDF](http://dl.2ality.com/2012/10/jsconf.pdf)
 
-(function() {
-  var Child, GrandChild, Parent, child, grandChild, parent,
-    __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-  Parent = (function() {
-
-    function Parent(msg) {
-      if (msg == null) msg = "Parent constuctor";
-      this.log(msg);
-    }
-
-    Parent.prototype.log = function(msg) {
-      if (window.console != null) return console.log(msg);
-    };
-
-    Parent.prototype.val = 10;
-
-    Parent.prototype.getVal = function() {
-      return this.val;
-    };
-
-    return Parent;
-
-  })();
-
-  Child = (function(_super) {
-
-    __extends(Child, _super);
-
-    function Child() {
-      Child.__super__.constructor.apply(this, arguments);
-    }
-
-    Child.prototype.val = 100;
-
-    Child.prototype.getVal = function() {
-      return "" + (Child.__super__.getVal.call(this)) + "!";
-    };
-
-    return Child;
-
-  })(Parent);
-
-  GrandChild = (function(_super) {
-
-    __extends(GrandChild, _super);
-
-    function GrandChild() {
-      GrandChild.__super__.constructor.apply(this, arguments);
-    }
-
-    GrandChild.prototype.val = 1000;
-
-    GrandChild.prototype.getVal = function() {
-      return "" + (GrandChild.__super__.getVal.call(this)) + "!!";
-    };
-
-    return GrandChild;
-
-  })(Child);
-
-  parent = new Parent;
-
-  child = new Child;
-
-  grandChild = new GrandChild;
-
-  parent.log(parent.getVal());
-
-  child.log(child.getVal());
-
-  grandChild.log(grandChild.getVal());
-
-}).call(this);
-
-```
-
-output
-
-```
-Parent constuctor
-Parent constuctor
-Parent constuctor
-10
-100!
-1000!!!
-```
-
-* Código fuente en [GitHub](https://github.com/phpmx/js-prototype-inherit-ways)
+* [Github](https://github.com/phpmx/js-prototype-inherit-ways)
